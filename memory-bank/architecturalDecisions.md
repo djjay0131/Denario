@@ -197,6 +197,67 @@ Implement two-folder system:
 
 ---
 
+## ADR-008: Use GCP Cloud Build for Container Images
+
+**Date:** 2025-12-18
+**Status:** Accepted
+
+**Context:**
+Need to build Docker images for Cloud Run deployment. Options include building locally with Docker and pushing to registry, or using GCP Cloud Build for server-side builds.
+
+**Decision:**
+Use GCP Cloud Build instead of local Docker builds:
+- Cloud Build handles build and push in one step
+- No need for local Docker installation or resources
+- Consistent build environment (not dependent on developer machine)
+- Integrated with Artifact Registry
+- Configuration stored in `cloudbuild.yaml`
+
+**Consequences:**
+- Pros: No local Docker required, consistent builds, faster for large images (cloud bandwidth), automatic integration with GCP services
+- Cons: Requires Cloud Build API enabled, costs for build minutes (free tier available), slightly more complex initial setup
+- Impact: Simpler developer experience, reproducible builds, better CI/CD foundation
+
+**Alternatives Considered:**
+- Local Docker build + push: Rejected, requires local Docker, large image uploads, inconsistent environments
+- GitHub Actions + push: Considered, would work but adds complexity and separate credential management
+- Pre-built public images: Rejected, need customization for project-specific dependencies
+
+---
+
+## ADR-009: GitHub-Triggered CI/CD Pipeline
+
+**Date:** 2025-12-19
+**Status:** Accepted
+
+**Context:**
+Need automated deployment pipeline to deploy Denario to Cloud Run when code changes are pushed. Manual deployments are error-prone and slow down development iteration.
+
+**Decision:**
+Implement full CI/CD pipeline using GCP Cloud Build with GitHub triggers:
+- **Production trigger**: Builds and deploys on push to `master` branch
+- **Development trigger**: Builds and deploys on push to `dev/*` branches
+- **Secret management**: API keys stored in GCP Secret Manager, injected at runtime
+- **Image tagging**: Each build tagged with commit SHA for traceability
+
+Pipeline stages:
+1. Build Docker image with commit SHA tag
+2. Tag as `latest`
+3. Push both tags to Artifact Registry
+4. Deploy to Cloud Run with secrets
+
+**Consequences:**
+- Pros: Automated deployments, consistent builds, traceable versions, secure secrets
+- Cons: Build costs (mitigated by free tier), initial setup complexity
+- Impact: Faster development cycle, reliable deployments, production-ready infrastructure
+
+**Alternatives Considered:**
+- Manual deployment: Rejected, error-prone and slow
+- GitHub Actions: Rejected, would require separate credential management
+- Cloud Build without triggers: Rejected, still requires manual invocation
+
+---
+
 ## Template for Future Decisions
 
 ```markdown
