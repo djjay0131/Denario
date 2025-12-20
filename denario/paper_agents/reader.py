@@ -20,9 +20,25 @@ def preprocess_node(state: GraphState, config: RunnableConfig):
 
     # set the LLM
     if 'gemini' in state['llm']['model']:
-        state['llm']['llm'] = ChatGoogleGenerativeAI(model=state['llm']['model'],
-                                                temperature=state['llm']['temperature'],
-                                                google_api_key=state["keys"].GEMINI)
+        # Check if running on GCP with Vertex AI (GOOGLE_CLOUD_PROJECT env var set)
+        gcp_project = os.environ.get('GOOGLE_CLOUD_PROJECT')
+        gcp_location = os.environ.get('GOOGLE_CLOUD_LOCATION', 'us-central1')
+
+        if gcp_project:
+            # Use Vertex AI (no api_key needed, uses service account credentials)
+            state['llm']['llm'] = ChatGoogleGenerativeAI(
+                model=state['llm']['model'],
+                temperature=state['llm']['temperature'],
+                project=gcp_project,
+                location=gcp_location
+            )
+        else:
+            # Use consumer Gemini API with api_key
+            state['llm']['llm'] = ChatGoogleGenerativeAI(
+                model=state['llm']['model'],
+                temperature=state['llm']['temperature'],
+                google_api_key=state["keys"].GEMINI
+            )
 
     elif any(key in state['llm']['model'] for key in ['gpt', 'o3']):
         state['llm']['llm'] = ChatOpenAI(model=state['llm']['model'],
