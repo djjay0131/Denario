@@ -28,7 +28,8 @@ def preprocess_node(state: GraphState, config: RunnableConfig):
                 model=state['llm']['model'],
                 temperature=state['llm']['temperature'],
                 project=gcp_project,
-                location=gcp_location
+                location=gcp_location,
+                vertexai=True
             )
         else:
             # Use consumer Gemini API with api_key
