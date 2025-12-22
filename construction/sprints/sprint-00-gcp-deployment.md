@@ -118,7 +118,7 @@ See [architecturalDecisions.md](../../memory-bank/architecturalDecisions.md) for
 - GCP account with billing enabled ✅
 - LLM API keys (OpenAI, Google, Anthropic, Perplexity) ✅
 - gcloud CLI installed and authenticated ✅
-- GitHub OAuth authorization (pending)
+- GitHub OAuth authorization ✅
 
 ---
 
@@ -129,7 +129,7 @@ See [architecturalDecisions.md](../../memory-bank/architecturalDecisions.md) for
 | GCP billing not set up | Billing enabled | ✅ Resolved |
 | API keys not available | Stored in Secret Manager | ✅ Resolved |
 | Docker build timeout | 30-minute timeout set | ✅ Configured |
-| GitHub OAuth not completed | User must authorize | 🔄 Pending |
+| GitHub OAuth not completed | User authorized | ✅ Resolved |
 
 ---
 
