@@ -1,6 +1,6 @@
 # Progress Tracking
 
-**Last Updated:** 2025-12-18
+**Last Updated:** 2025-12-20
 
 ## Project Status: Phase 0 - Infrastructure Setup
 
@@ -28,28 +28,48 @@ Foundation for systematic development with full context retention.
 **Verification:**
 All files updated with project-specific content aligned with reference paper.
 
+### GCP Infrastructure Setup (2025-12-18)
+
+**What:**
+- Configured complete GCP Cloud Run deployment infrastructure:
+  - Selected GCP project: `vt-gcp-00042` (Agents4Research)
+  - Enabled required APIs: Cloud Run, Artifact Registry, AI Platform, Cloud Build, Secret Manager
+  - Created Artifact Registry: `us-central1-docker.pkg.dev/vt-gcp-00042/denario`
+  - Stored API keys in Secret Manager: OpenAI, Google, Anthropic, Perplexity
+  - Created cloudbuild.yaml with full CI/CD pipeline (build → tag → push → deploy)
+  - Created .gcloudignore to optimize build context
+  - Added ADR-009 for CI/CD pipeline decision
+
+**Impact:**
+GCP infrastructure ready for deployment. Only GitHub OAuth authorization needed to activate triggers.
+
+**Verification:**
+- Commits: `bbda59d` (CI/CD pipeline), `1a3b6f0` (memory-bank and construction folders)
+- All infrastructure commands documented in sprint-00-gcp-deployment.md
+- Branch: `dev/agentic-kg-setup` (not yet merged to master)
+
 ---
 
 ## In Progress
 
-### GCP Deployment Setup
+### GitHub OAuth Authorization
 
 **What:**
-Deploying Denario to GCP Cloud Run
+Complete GitHub integration for Cloud Build triggers
 
 **Current State:**
-- Deployment steps documented in techContext.md
-- Dockerfiles available (docker/Dockerfile.dev, docker/Dockerfile.prod)
-- Vertex AI setup documented in docs/llm_api_keys/vertex-ai-setup.md
+- Cloud Build connection created: `denario-github`
+- Infrastructure fully configured
+- Awaiting user action to authorize GitHub OAuth
 
 **Next Steps:**
-- [ ] Create/configure GCP project
-- [ ] Enable required APIs (run, artifactregistry, aiplatform)
-- [ ] Set up Vertex AI service account
-- [ ] Build Docker image
-- [ ] Push to Container Registry
-- [ ] Deploy to Cloud Run
-- [ ] Test deployment
+- [ ] User authorizes GitHub OAuth at Cloud Build console
+- [ ] Link repository `djjay0131/Denario`
+- [ ] Create production trigger (master branch)
+- [ ] Create development trigger (dev/* branches)
+- [ ] Test deployment by pushing to dev branch
+- [ ] Verify Cloud Run deployment and GUI accessibility
+- [ ] Merge `dev/agentic-kg-setup` to master
 
 ---
 
@@ -58,14 +78,19 @@ Deploying Denario to GCP Cloud Run
 ### Phase 0: Infrastructure (Current)
 
 **Tasks:**
-- [ ] GCP project setup
-- [ ] Vertex AI service account configuration
-- [ ] Docker image build and push
-- [ ] Cloud Run deployment
+- [x] GCP project setup
+- [x] Enable required APIs
+- [x] Artifact Registry creation
+- [x] Secret Manager configuration
+- [x] Cloud Build pipeline creation
+- [ ] GitHub OAuth authorization (user action required)
+- [ ] Create Cloud Build triggers
+- [ ] Test deployment pipeline
 - [ ] Deployment verification and testing
+- [ ] Merge dev branch to master
 
 **Priority:** High
-**Dependencies:** GCP account with billing
+**Dependencies:** User completes GitHub OAuth
 
 ### Phase 1: Knowledge Graph Foundation
 
@@ -108,7 +133,11 @@ Deploying Denario to GCP Cloud Run
 
 ## Known Issues
 
-None currently - project just starting.
+### GitHub OAuth Blocker (2025-12-18)
+**Issue:** Cloud Build triggers require GitHub OAuth authorization (user action)
+**Impact:** Cannot test automated deployment pipeline until authorized
+**Workaround:** Can deploy manually using `gcloud builds submit`
+**Status:** Waiting for user action
 
 ---
 
