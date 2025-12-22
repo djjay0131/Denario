@@ -258,6 +258,36 @@ Pipeline stages:
 
 ---
 
+## ADR-010: Neo4j for Knowledge Graph Storage
+
+**Date:** 2025-12-22
+**Status:** Accepted
+
+**Context:**
+Phase 1 requires a graph database to store research problems as first-class entities with explicit relations (extends, contradicts, depends-on) and hybrid symbolic-semantic retrieval capabilities.
+
+**Decision:**
+Use Neo4j as the knowledge graph database:
+- Property graph model fits entity-relation design
+- Native vector index support (Neo4j 5.x+) for embeddings
+- Mature Python driver (`neo4j` package)
+- Cypher query language for expressive graph traversal
+- Docker support for local development
+- Neo4j Aura available for production deployment
+
+**Consequences:**
+- Pros: Well-documented, strong ecosystem, supports hybrid retrieval natively, good visualization tools
+- Cons: Learning curve for Cypher, Community Edition lacks some enterprise features, potential cost at scale
+- Impact: Enables core knowledge graph functionality, supports the three-layer architecture
+
+**Alternatives Considered:**
+- Amazon Neptune: Rejected, more complex setup, AWS-locked, less Python tooling
+- Memgraph: Considered, good performance but smaller ecosystem
+- NetworkX + SQLite: Rejected, not suitable for production scale or vector search
+- PostgreSQL + pgvector: Considered, but graph queries would be complex
+
+---
+
 ## Template for Future Decisions
 
 ```markdown
